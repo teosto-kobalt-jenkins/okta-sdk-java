@@ -19,6 +19,7 @@ import com.okta.commons.http.config.BaseUrlResolver
 import com.okta.sdk.ds.RequestBuilder
 import com.okta.sdk.impl.Util
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver
+import com.okta.sdk.impl.client.DefaultClientBuilder
 import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.error.DefaultError
 import com.okta.sdk.resource.ResourceException
@@ -110,15 +111,16 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
 
-        String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT()
+        String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT(3600)
 
         privateKeyPemFile.deleteOnExit()
 
         assertThat(signedJwt, notNullValue())
 
         // decode the signed jwt and verify
-        Claims claims = Jwts.parser()
+        Claims claims = Jwts.parserBuilder()
             .setSigningKey(generatedPrivateKey)
+            .build()
             .parseClaimsJws(signedJwt).getBody()
 
         assertThat(claims, notNullValue())
@@ -133,6 +135,32 @@ class AccessTokenRetrieverServiceImplTest {
         assertThat(claims.get("sub"), notNullValue())
         assertEquals(claims.get("sub"), clientConfig.getClientId(), "sub must be equal to client id")
         assertThat(claims.get("jti"), notNullValue())
+    }
+
+    @Test
+    void testJwtExpiryTime() {
+        def clientConfig = new DefaultClientBuilder().getClientConfiguration()
+        PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
+        File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
+        BaseUrlResolver baseUrlResolver = new BaseUrlResolver() {
+            @Override
+            String getBaseUrl() {
+                return "https://sample.okta.com"
+            }
+        }
+        clientConfig.setBaseUrlResolver(baseUrlResolver)
+        clientConfig.setPrivateKey(privateKeyPemFile.path)
+
+        def signedJwt = new AccessTokenRetrieverServiceImpl(clientConfig).createSignedJWT(clientConfig.getJwtExpiryTime())
+
+        privateKeyPemFile.deleteOnExit()
+        assertThat(signedJwt, notNullValue())
+        Claims claims = Jwts.parserBuilder()
+            .setSigningKey(generatedPrivateKey)
+            .build()
+            .parseClaimsJws(signedJwt).getBody()
+        assertEquals(Integer.valueOf(claims.get("exp")) - Integer.valueOf(claims.get("iat")), 600,
+            "token expiry time is not 600s")
     }
 
     @Test
@@ -156,7 +184,7 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
 
-        String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT()
+        String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT(100)
 
         assertThat(signedJwt, notNullValue())
     }

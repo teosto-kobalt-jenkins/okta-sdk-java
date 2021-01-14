@@ -48,6 +48,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private boolean cacheManagerEnabled;
     private long cacheManagerTtl;
     private long cacheManagerTti;
+    private long jwtExpiryTime;
     private Map<String, CacheConfigurationBuilder> cacheManagerCaches = new LinkedHashMap<>();
     private RequestAuthenticatorFactory requestAuthenticatorFactory = new DefaultRequestAuthenticatorFactory();
     private AuthenticationScheme authenticationScheme;
@@ -159,6 +160,14 @@ public class ClientConfiguration extends HttpClientConfiguration {
      */
     public void setCacheManagerTti(long cacheManagerTti) {
         this.cacheManagerTti = cacheManagerTti;
+    }
+
+    public long getJwtExpiryTime() {
+        return jwtExpiryTime;
+    }
+
+    public void setJwtExpiryTime(long jwtExpiryTime) {
+        this.jwtExpiryTime = jwtExpiryTime;
     }
 
     /**

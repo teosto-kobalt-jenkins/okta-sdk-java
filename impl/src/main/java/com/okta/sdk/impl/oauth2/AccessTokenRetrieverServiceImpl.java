@@ -44,7 +44,6 @@ import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -60,6 +59,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     private static final Logger log = LoggerFactory.getLogger(AccessTokenRetrieverServiceImpl.class);
 
     private static final String TOKEN_URI  = "/oauth2/v1/token";
+    private static final int DEFAULT_EXPIRATION_OFFSET = 3600;
 
     private final ClientConfiguration tokenClientConfiguration;
     private final OAuth2TokenClient tokenClient;
@@ -86,7 +86,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         log.debug("Attempting to get OAuth2 access token for client id {} from {}",
             tokenClientConfiguration.getClientId(), tokenClientConfiguration.getBaseUrl() + TOKEN_URI);
 
-        String signedJwt = createSignedJWT();
+        String signedJwt = createSignedJWT(tokenClientConfiguration.getJwtExpiryTime());
         String scope = String.join(" ", tokenClientConfiguration.getScopes());
 
         try {
@@ -125,26 +125,25 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     /**
      * Create signed JWT string with the supplied token client configuration details.
      *
+     * @param jwtExpiryTime seconds to expiration of token. {@link #DEFAULT_EXPIRATION_OFFSET} will be used if not set.
      * @return signed JWT string
      * @throws InvalidKeyException
      * @throws IOException
      */
-    String createSignedJWT() throws InvalidKeyException, IOException {
+    String createSignedJWT(long jwtExpiryTime) throws InvalidKeyException, IOException {
         String clientId = tokenClientConfiguration.getClientId();
         PrivateKey privateKey = parsePrivateKey(getPemReader());
         Instant now = Instant.now();
 
-        String jwt = Jwts.builder()
+        return Jwts.builder()
             .setAudience(tokenClientConfiguration.getBaseUrl() + TOKEN_URI)
             .setIssuedAt(Date.from(now))
-            .setExpiration(Date.from(now.plus(1L, ChronoUnit.HOURS)))
+            .setExpiration(Date.from(now.plusSeconds(jwtExpiryTime > 0 ? jwtExpiryTime : DEFAULT_EXPIRATION_OFFSET)))
             .setIssuer(clientId)
             .setSubject(clientId)
             .claim("jti", UUID.randomUUID().toString())
             .signWith(privateKey)
             .compact();
-
-        return jwt;
     }
 
     /**
@@ -242,6 +241,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         tokenClientConfiguration.setClientId(apiClientConfiguration.getClientId());
         tokenClientConfiguration.setScopes(apiClientConfiguration.getScopes());
         tokenClientConfiguration.setPrivateKey(apiClientConfiguration.getPrivateKey());
+        tokenClientConfiguration.setJwtExpiryTime(apiClientConfiguration.getJwtExpiryTime());
 
         // setting this to '0' will disable this check and only 'retryMaxAttempts' will be effective
         tokenClientConfiguration.setRetryMaxElapsed(0);

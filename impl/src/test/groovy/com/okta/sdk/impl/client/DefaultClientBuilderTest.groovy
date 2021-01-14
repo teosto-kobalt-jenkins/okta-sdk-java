@@ -55,7 +55,7 @@ class DefaultClientBuilderTest {
      * If this method is invoked with an @BeforeMethod annotation the Listener will be invoked before and after this
      * method as well.
      */
-    void clearOktaEnvAndSysProps() {
+    static void clearOktaEnvAndSysProps() {
         System.clearProperty("okta.client.token")
         System.clearProperty("okta.client.orgUrl")
         System.clearProperty("okta.client.authorizationMode")
@@ -63,14 +63,9 @@ class DefaultClientBuilderTest {
         System.clearProperty("okta.client.scopes")
         System.clearProperty("okta.client.privateKey")
         System.clearProperty("okta.client.connectionTimeout")
+        System.clearProperty("okta.client.jwtExpiryTime")
 
-        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_TOKEN", null)
-        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_ORGURL", null)
-        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_AUTHORIZATIONMODE", null)
-        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_CLIENTID", null)
-        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_SCOPES", null)
-        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_PRIVATEKEY", null)
-        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_CONNECTIONTIMEOUT", null)
+        RestoreEnvironmentVariables.clearEnvironmentVariables()
     }
 
     @Test
@@ -93,6 +88,7 @@ class DefaultClientBuilderTest {
         DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
         assertEquals clientBuilder.clientConfiguration.baseUrl, "https://api.okta.com/v42"
         assertEquals clientBuilder.clientConfiguration.connectionTimeout, 10
+        assertEquals clientBuilder.clientConfiguration.jwtExpiryTime, 600
         assertEquals clientBuilder.clientConfiguration.authenticationScheme, AuthenticationScheme.SSWS
     }
 

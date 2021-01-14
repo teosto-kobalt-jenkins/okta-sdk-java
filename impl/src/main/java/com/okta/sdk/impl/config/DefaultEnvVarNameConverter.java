@@ -36,6 +36,7 @@ public class DefaultEnvVarNameConverter implements EnvVarNameConverter {
             ClientBuilder.DEFAULT_CLIENT_CACHE_TTI_PROPERTY_NAME,
             ClientBuilder.DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME,
             ClientBuilder.DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME,
+            ClientBuilder.DEFAULT_CLIENT_JWT_EXPIRY_TIME_PROPERTY_NAME,
             ClientBuilder.DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME,
             ClientBuilder.DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME,
             ClientBuilder.DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME,
