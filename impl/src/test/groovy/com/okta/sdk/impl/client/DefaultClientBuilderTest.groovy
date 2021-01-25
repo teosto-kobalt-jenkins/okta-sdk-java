@@ -63,7 +63,7 @@ class DefaultClientBuilderTest {
         System.clearProperty("okta.client.scopes")
         System.clearProperty("okta.client.privateKey")
         System.clearProperty("okta.client.connectionTimeout")
-        System.clearProperty("okta.client.jwtExpiryTime")
+        System.clearProperty("okta.client.oauth.tokenTtl")
 
         RestoreEnvironmentVariables.clearEnvironmentVariables()
     }
@@ -88,7 +88,7 @@ class DefaultClientBuilderTest {
         DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
         assertEquals clientBuilder.clientConfiguration.baseUrl, "https://api.okta.com/v42"
         assertEquals clientBuilder.clientConfiguration.connectionTimeout, 10
-        assertEquals clientBuilder.clientConfiguration.jwtExpiryTime, 600
+        assertEquals clientBuilder.clientConfiguration.oauthTokenTtl, 600
         assertEquals clientBuilder.clientConfiguration.authenticationScheme, AuthenticationScheme.SSWS
     }
 

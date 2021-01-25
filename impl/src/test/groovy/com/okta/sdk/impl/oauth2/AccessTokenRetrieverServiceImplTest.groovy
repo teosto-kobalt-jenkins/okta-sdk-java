@@ -110,8 +110,9 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
+        when(clientConfig.getOauthTokenTtl()).thenReturn(3600L)
 
-        String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT(3600)
+        String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT()
 
         privateKeyPemFile.deleteOnExit()
 
@@ -138,7 +139,7 @@ class AccessTokenRetrieverServiceImplTest {
     }
 
     @Test
-    void testJwtExpiryTime() {
+    void testOauthTokenTtl() {
         def clientConfig = new DefaultClientBuilder().getClientConfiguration()
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
@@ -151,7 +152,7 @@ class AccessTokenRetrieverServiceImplTest {
         clientConfig.setBaseUrlResolver(baseUrlResolver)
         clientConfig.setPrivateKey(privateKeyPemFile.path)
 
-        def signedJwt = new AccessTokenRetrieverServiceImpl(clientConfig).createSignedJWT(clientConfig.getJwtExpiryTime())
+        def signedJwt = new AccessTokenRetrieverServiceImpl(clientConfig).createSignedJWT()
 
         privateKeyPemFile.deleteOnExit()
         assertThat(signedJwt, notNullValue())
@@ -161,6 +162,22 @@ class AccessTokenRetrieverServiceImplTest {
             .parseClaimsJws(signedJwt).getBody()
         assertEquals(Integer.valueOf(claims.get("exp")) - Integer.valueOf(claims.get("iat")), 600,
             "token expiry time is not 600s")
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    void testOauthTokenTtlNegative() {
+        def clientConfig = mock(ClientConfiguration)
+        BaseUrlResolver baseUrlResolver = new BaseUrlResolver() {
+            @Override
+            String getBaseUrl() {
+                return "https://sample.okta.com"
+            }
+        }
+
+        when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
+        when(clientConfig.getOauthTokenTtl()).thenReturn(-40L)
+
+        getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT()
     }
 
     @Test
@@ -183,8 +200,9 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
+        when(clientConfig.getOauthTokenTtl()).thenReturn(100L)
 
-        String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT(100)
+        String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT()
 
         assertThat(signedJwt, notNullValue())
     }
@@ -212,6 +230,7 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
+        when(clientConfig.getOauthTokenTtl()).thenReturn(100L)
 
         when(tokenClient.http()).thenReturn(requestBuilder)
 
@@ -250,6 +269,7 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
+        when(clientConfig.getOauthTokenTtl()).thenReturn(100L)
 
         when(tokenClient.http()).thenReturn(requestBuilder)
 

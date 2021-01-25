@@ -193,10 +193,6 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientConfig.setConnectionTimeout(Integer.parseInt(props.get(DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME)));
         }
 
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_JWT_EXPIRY_TIME_PROPERTY_NAME))) {
-            clientConfig.setJwtExpiryTime(Long.parseLong(props.get(DEFAULT_CLIENT_JWT_EXPIRY_TIME_PROPERTY_NAME)));
-        }
-
         if (Strings.hasText(props.get(DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME))) {
             clientConfig.setAuthenticationScheme(Enum.valueOf(AuthenticationScheme.class, props.get(DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME)));
         }
@@ -236,6 +232,10 @@ public class DefaultClientBuilder implements ClientBuilder {
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME))) {
             clientConfig.setRetryMaxElapsed(Integer.parseInt(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME)));
+        }
+
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_OAUTH_TOKEN_TTL_PROPERTY_NAME))) {
+            clientConfig.setOauthTokenTtl(Long.parseLong(props.get(DEFAULT_CLIENT_OAUTH_TOKEN_TTL_PROPERTY_NAME)));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME))) {

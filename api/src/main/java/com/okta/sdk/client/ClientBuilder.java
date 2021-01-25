@@ -202,7 +202,6 @@ public interface ClientBuilder {
     String DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME = "okta.client.cache.caches";
     String DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME = "okta.client.orgUrl";
     String DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME = "okta.client.connectionTimeout";
-    String DEFAULT_CLIENT_JWT_EXPIRY_TIME_PROPERTY_NAME = "okta.client.jwtExpiryTime";
     String DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME = "okta.client.authenticationScheme";
     String DEFAULT_CLIENT_PROXY_PORT_PROPERTY_NAME = "okta.client.proxy.port";
     String DEFAULT_CLIENT_PROXY_HOST_PROPERTY_NAME = "okta.client.proxy.host";
@@ -213,6 +212,7 @@ public interface ClientBuilder {
     String DEFAULT_CLIENT_SCOPES_PROPERTY_NAME = "okta.client.scopes";
     String DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME = "okta.client.privateKey";
     String DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME = "okta.client.requestTimeout";
+    String DEFAULT_CLIENT_OAUTH_TOKEN_TTL_PROPERTY_NAME = "okta.client.oauth.tokenTtl";
     String DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME = "okta.client.rateLimit.maxRetries";
     String DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME = "okta.testing.disableHttpsCheck";
 

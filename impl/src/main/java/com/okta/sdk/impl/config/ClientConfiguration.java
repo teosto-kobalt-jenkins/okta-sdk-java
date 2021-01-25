@@ -48,7 +48,6 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private boolean cacheManagerEnabled;
     private long cacheManagerTtl;
     private long cacheManagerTti;
-    private long jwtExpiryTime;
     private Map<String, CacheConfigurationBuilder> cacheManagerCaches = new LinkedHashMap<>();
     private RequestAuthenticatorFactory requestAuthenticatorFactory = new DefaultRequestAuthenticatorFactory();
     private AuthenticationScheme authenticationScheme;
@@ -57,6 +56,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private String clientId;
     private Set<String> scopes = new HashSet<>();
     private String privateKey;
+    private long oauthTokenTtl;
 
     public String getApiToken() {
         return apiToken;
@@ -130,6 +130,14 @@ public class ClientConfiguration extends HttpClientConfiguration {
         this.privateKey = privateKey;
     }
 
+    public long getOauthTokenTtl() {
+        return oauthTokenTtl;
+    }
+
+    public void setOauthTokenTtl(long oauthTokenTtl) {
+        this.oauthTokenTtl = oauthTokenTtl;
+    }
+
     public boolean isCacheManagerEnabled() {
         return cacheManagerEnabled;
     }
@@ -160,14 +168,6 @@ public class ClientConfiguration extends HttpClientConfiguration {
      */
     public void setCacheManagerTti(long cacheManagerTti) {
         this.cacheManagerTti = cacheManagerTti;
-    }
-
-    public long getJwtExpiryTime() {
-        return jwtExpiryTime;
-    }
-
-    public void setJwtExpiryTime(long jwtExpiryTime) {
-        this.jwtExpiryTime = jwtExpiryTime;
     }
 
     /**
@@ -220,6 +220,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
             ", privateKey=" + ((getPrivateKey() != null) ? "xxxxx" : null) +
             ", connectionTimeout=" + getConnectionTimeout() +
             ", requestAuthenticator=" + getRequestAuthenticator() +
+            ", oauthTokenTtl=" + getOauthTokenTtl() +
             ", retryMaxElapsed=" + getRetryMaxElapsed() +
             ", retryMaxAttempts=" + getRetryMaxAttempts() +
             ", proxy=" + getProxy() +

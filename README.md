@@ -426,16 +426,15 @@ The full YAML configuration looks like:
 ```yaml
 okta:
   client:
-    connectionTimeout: 30               # seconds
-    jwtExpiryTime: 3600                 # seconds
-    orgUrl: "https://{yourOktaDomain}"  # i.e. https://dev-123456.okta.com
+    connectionTimeout: 30 # seconds
+    orgUrl: "https://{yourOktaDomain}" # i.e. https://dev-123456.okta.com
     proxy:
       port: null
       host: null
       username: null
       password: null
     token: yourApiToken
-    requestTimeout: 0                   # seconds
+    requestTimeout: 0 # seconds
     rateLimit:
       maxRetries: 4
 ```
@@ -446,7 +445,6 @@ When you use OAuth 2.0, the full YAML configuration looks like:
 okta:
   client:
     connectionTimeout: 30               # seconds
-    jwtExpiryTime: 3600                 # seconds
     orgUrl: "https://{yourOktaDomain}"  # i.e. https://dev-123456.oktapreview.com
     proxy:
       port: null
@@ -465,6 +463,8 @@ okta:
     # or specify a path to a PEM file
     # privateKey: "/path/to/yourPrivateKey.pem" # PEM format. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
     requestTimeout: 0                   # seconds
+    oauth:
+      tokenTtl: 3600                    # seconds
     rateLimit:
       maxRetries: 4
 ```
