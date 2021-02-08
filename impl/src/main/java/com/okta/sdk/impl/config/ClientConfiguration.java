@@ -27,6 +27,7 @@ import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.http.authc.DefaultRequestAuthenticatorFactory;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private String clientId;
     private Set<String> scopes = new HashSet<>();
     private String privateKey;
-    private long oauthTokenTtl;
+    private Duration accessTokenTtl;
 
     public String getApiToken() {
         return apiToken;
@@ -130,12 +131,12 @@ public class ClientConfiguration extends HttpClientConfiguration {
         this.privateKey = privateKey;
     }
 
-    public long getOauthTokenTtl() {
-        return oauthTokenTtl;
+    public Duration getAccessTokenTtl() {
+        return accessTokenTtl;
     }
 
-    public void setOauthTokenTtl(long oauthTokenTtl) {
-        this.oauthTokenTtl = oauthTokenTtl;
+    public void setAccessTokenTtl(Duration accessTokenTtl) {
+        this.accessTokenTtl = accessTokenTtl;
     }
 
     public boolean isCacheManagerEnabled() {
@@ -220,7 +221,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
             ", privateKey=" + ((getPrivateKey() != null) ? "xxxxx" : null) +
             ", connectionTimeout=" + getConnectionTimeout() +
             ", requestAuthenticator=" + getRequestAuthenticator() +
-            ", oauthTokenTtl=" + getOauthTokenTtl() +
+            ", accessTokenTtl=" + getAccessTokenTtl() +
             ", retryMaxElapsed=" + getRetryMaxElapsed() +
             ", retryMaxAttempts=" + getRetryMaxAttempts() +
             ", proxy=" + getProxy() +

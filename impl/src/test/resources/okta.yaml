@@ -19,11 +19,10 @@ okta:
     token: 13
     orgUrl: https://api.okta.com/v42
     connectionTimeout: 10
+    accessTokenTtl: PT10M
     proxy:
       host: "proxyyaml"
       port: 9009
       username: "fooyaml"
       password: bar
     authenticationScheme: SSWS
-    oauth:
-      tokenTtl: 600

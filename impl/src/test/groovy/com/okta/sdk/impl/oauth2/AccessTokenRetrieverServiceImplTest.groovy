@@ -30,6 +30,7 @@ import org.testng.annotations.Test
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.PrivateKey
+import java.time.Duration
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
@@ -110,7 +111,7 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
-        when(clientConfig.getOauthTokenTtl()).thenReturn(3600L)
+        when(clientConfig.getAccessTokenTtl()).thenReturn(Duration.ofHours(1))
 
         String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT()
 
@@ -175,7 +176,7 @@ class AccessTokenRetrieverServiceImplTest {
         }
 
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
-        when(clientConfig.getOauthTokenTtl()).thenReturn(-40L)
+        when(clientConfig.getAccessTokenTtl()).thenReturn(Duration.ofSeconds(-40))
 
         getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT()
     }
@@ -200,7 +201,7 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
-        when(clientConfig.getOauthTokenTtl()).thenReturn(100L)
+        when(clientConfig.getAccessTokenTtl()).thenReturn(Duration.ofSeconds(100))
 
         String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT()
 
@@ -230,7 +231,7 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
-        when(clientConfig.getOauthTokenTtl()).thenReturn(100L)
+        when(clientConfig.getAccessTokenTtl()).thenReturn(Duration.ofSeconds(100))
 
         when(tokenClient.http()).thenReturn(requestBuilder)
 
@@ -269,7 +270,7 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
-        when(clientConfig.getOauthTokenTtl()).thenReturn(100L)
+        when(clientConfig.getAccessTokenTtl()).thenReturn(Duration.ofSeconds(100))
 
         when(tokenClient.http()).thenReturn(requestBuilder)
 

@@ -130,9 +130,9 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      * @throws IllegalArgumentException if <code>tokenTtl</code> property is missing or negative
      */
     String createSignedJWT() throws InvalidKeyException, IOException {
-        long tokenTtl = tokenClientConfiguration.getOauthTokenTtl();
+        long tokenTtl = tokenClientConfiguration.getAccessTokenTtl().getSeconds();
         if (tokenTtl < 1) {
-            throw new IllegalArgumentException("'okta.client.oauth.tokenTtl' property is missing or negative");
+            throw new IllegalArgumentException("'okta.client.accessTokenTtl' property is missing or negative");
         }
         String clientId = tokenClientConfiguration.getClientId();
         PrivateKey privateKey = parsePrivateKey(getPemReader());
@@ -244,7 +244,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         tokenClientConfiguration.setClientId(apiClientConfiguration.getClientId());
         tokenClientConfiguration.setScopes(apiClientConfiguration.getScopes());
         tokenClientConfiguration.setPrivateKey(apiClientConfiguration.getPrivateKey());
-        tokenClientConfiguration.setOauthTokenTtl(apiClientConfiguration.getOauthTokenTtl());
+        tokenClientConfiguration.setAccessTokenTtl(apiClientConfiguration.getAccessTokenTtl());
 
         // setting this to '0' will disable this check and only 'retryMaxAttempts' will be effective
         tokenClientConfiguration.setRetryMaxElapsed(0);

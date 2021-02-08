@@ -62,6 +62,7 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
+import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -234,8 +235,8 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientConfig.setRetryMaxElapsed(Integer.parseInt(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME)));
         }
 
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_OAUTH_TOKEN_TTL_PROPERTY_NAME))) {
-            clientConfig.setOauthTokenTtl(Long.parseLong(props.get(DEFAULT_CLIENT_OAUTH_TOKEN_TTL_PROPERTY_NAME)));
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_ACCESS_TOKEN_TTL_PROPERTY_NAME))) {
+            clientConfig.setAccessTokenTtl(Duration.parse(props.get(DEFAULT_CLIENT_ACCESS_TOKEN_TTL_PROPERTY_NAME)));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME))) {
