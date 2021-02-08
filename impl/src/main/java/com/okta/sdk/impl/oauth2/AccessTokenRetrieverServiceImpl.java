@@ -43,6 +43,7 @@ import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.PrivateKey;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Optional;
@@ -130,8 +131,8 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      * @throws IllegalArgumentException if <code>accessTokenTtl</code> property is missing or negative
      */
     String createSignedJWT() throws InvalidKeyException, IOException {
-        long accessTokenTtl = tokenClientConfiguration.getAccessTokenTtl().getSeconds();
-        if (accessTokenTtl < 1) {
+        Duration accessTokenTtl = tokenClientConfiguration.getAccessTokenTtl();
+        if (accessTokenTtl.isZero() || accessTokenTtl.isNegative()) {
             throw new IllegalArgumentException("'okta.client.accessTokenTtl' property is missing or negative");
         }
         String clientId = tokenClientConfiguration.getClientId();
@@ -141,7 +142,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         return Jwts.builder()
             .setAudience(tokenClientConfiguration.getBaseUrl() + TOKEN_URI)
             .setIssuedAt(Date.from(now))
-            .setExpiration(Date.from(now.plusSeconds(tokenTtl)))
+            .setExpiration(Date.from(now.plus(accessTokenTtl)))
             .setIssuer(clientId)
             .setSubject(clientId)
             .claim("jti", UUID.randomUUID().toString())
