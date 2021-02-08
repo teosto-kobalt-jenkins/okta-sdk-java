@@ -127,11 +127,11 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      * @return signed JWT string
      * @throws InvalidKeyException
      * @throws IOException
-     * @throws IllegalArgumentException if <code>tokenTtl</code> property is missing or negative
+     * @throws IllegalArgumentException if <code>accessTokenTtl</code> property is missing or negative
      */
     String createSignedJWT() throws InvalidKeyException, IOException {
-        long tokenTtl = tokenClientConfiguration.getAccessTokenTtl().getSeconds();
-        if (tokenTtl < 1) {
+        long accessTokenTtl = tokenClientConfiguration.getAccessTokenTtl().getSeconds();
+        if (accessTokenTtl < 1) {
             throw new IllegalArgumentException("'okta.client.accessTokenTtl' property is missing or negative");
         }
         String clientId = tokenClientConfiguration.getClientId();
