@@ -19,7 +19,7 @@ okta:
     token: 13
     orgUrl: https://api.okta.com/v42
     connectionTimeout: 10
-    accessTokenTtl: PT10M
+    accessTokenTtl: 600
     proxy:
       host: "proxyyaml"
       port: 9009

@@ -16,6 +16,7 @@
  */
 package com.okta.sdk.impl.client;
 
+import org.apache.commons.lang3.StringUtils;
 import com.okta.commons.configcheck.ConfigurationValidator;
 import com.okta.commons.http.config.BaseUrlResolver;
 import com.okta.commons.lang.Assert;
@@ -238,8 +239,11 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientConfig.setRetryMaxElapsed(Integer.parseInt(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME)));
         }
 
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_ACCESS_TOKEN_TTL_PROPERTY_NAME))) {
-            clientConfig.setAccessTokenTtl(Duration.parse(props.get(DEFAULT_CLIENT_ACCESS_TOKEN_TTL_PROPERTY_NAME)));
+        String accessTokenTtl = props.get(DEFAULT_CLIENT_ACCESS_TOKEN_TTL_PROPERTY_NAME);
+        if (Strings.hasText(accessTokenTtl)) {
+            clientConfig.setAccessTokenTtl(StringUtils.isNumeric(accessTokenTtl)
+                ? Duration.ofSeconds(Long.parseLong(accessTokenTtl))
+                : Duration.parse(accessTokenTtl));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME))) {

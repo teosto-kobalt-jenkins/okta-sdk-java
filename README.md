@@ -476,7 +476,7 @@ okta:
     # or specify a path to a PEM file
     # privateKey: "/path/to/yourPrivateKey.pem" # PEM format. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
     requestTimeout: 0                   # seconds
-    accessTokenTtl: PT1H                # duration in ISO-8601 format: PnDTnHnMn.nS
+    accessTokenTtl: PT1H                # seconds or duration in ISO-8601 format: PnDTnHnMn.nS
     rateLimit:
       maxRetries: 4
 ```
